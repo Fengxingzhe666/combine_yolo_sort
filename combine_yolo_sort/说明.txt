@@ -1,0 +1,44 @@
+visualization.py -> class Novisualization
+类成员：
+frame_idx 初始化为seq_info["min_frame_idx"]
+last_idx:初始化为seq_info["max_frame_idx"]
+
+def run(self, frame_callback):
+	while self.frame_idx <= self.last_idx:
+		frame_callback(self, self.frame_idx)
+		self.frame_idx += 1
+
+主程序中调用visualizer.run(frame_callback)循环调用frame_callback()函数，visualizer是class Novisualization的对象
+
+
+tracker.py -> class Tracker
+类成员：
+metric
+max_iou_distance
+max_age：删除追踪的最大错过次数
+n_init：轨道在初始化阶段保留帧数
+kf：卡尔曼滤波器，用于过滤图像空间中的目标轨迹
+tracks：列表，当前时间步的活跃追踪，List[Track]
+_next_id：初始化为1
+
+    def predict(self):
+        for track in self.tracks:
+            track.predict(self.kf)
+
+
+    def update(self, detections):  detection:List[Detection]
+        # 更新tracks列表等参数
+
+track.py -> class Track
+类成员
+mean
+covariance
+track_id
+hits = 1
+age = 1
+time_since_update = 0
+state = TrackState.Tentative
+features = []
+_n_init = n_init
+_max_age = max_age
+
